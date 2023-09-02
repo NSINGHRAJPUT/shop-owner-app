@@ -28,6 +28,7 @@ exports.deleteItem = (req, res) => {
   let obj = {};
   Shop.findAll({ where: { id: id } }).then(([item]) => {
     if (quantity == item.quantity) item.destroy();
+    if (quantity == 0) item.destroy();
     item.quantity = item.quantity - quantity
     if (item.quantity < 0) item.destroy();
     obj = { ...item }
