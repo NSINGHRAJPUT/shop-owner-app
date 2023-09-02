@@ -3,14 +3,13 @@ var itemList = document.getElementById('items');
 // Form submit event
 form.addEventListener('submit', addItem);
 // Delete event
-// itemList.addEventListener('click', removeItem);
+itemList.addEventListener('click', removeItem);
 
 
 window.addEventListener('load', () => {
   const response = axios.get("http://localhost:3000/shop/items/")
   response.then((response) => {
     response.data.map((item) => {
-      console.log(item)
       createElement(item.id, item.name, item.price, item.description, item.quantity)
     })
   })
@@ -22,6 +21,7 @@ function createElement(id, name, price, description, quantity) {
   let subLi = document.createElement('div');
   subLi.setAttribute('hidden', 'true');
   subLi.appendChild(document.createTextNode(id))
+  li.appendChild(subLi)
   li.className = 'list-group-item';
   li.appendChild(document.createTextNode(name));
   li.appendChild(document.createTextNode(" "));
@@ -49,7 +49,6 @@ function createElement(id, name, price, description, quantity) {
   li.appendChild(deleteBtn1);
   li.appendChild(deleteBtn2);
   li.appendChild(deleteBtn3);
-  li.appendChild(subLi)
   itemList.appendChild(li);
 }
 
@@ -68,47 +67,47 @@ function addItem(e) {
     quantity: quantity
   }
   console.log(myobj)
-  // const response = axios.post('http://localhost:3000/shop/add-item/', myobj)
-  // response.then((res) => {
-  //   createElement(res.data.Name, res.data.Number, res.data.Email)
-  // }).catch(err => console.log(err))
+  const response = axios.post('http://localhost:3000/shop/add-item/', myobj)
+  response.then((res) => {
+    createElement(res.data.id, res.data.name, res.data.price, res.data.description, res.data.quantity)
+  }).catch(err => console.log(err))
   document.getElementById('name').value = '';
   document.getElementById('price').value = '';
   document.getElementById('description').value = '';
   document.getElementById('quantity').value = '';
 }
 
-//Remove item from the list
-// function removeItem(e) {
-//   if (e.target.classList.contains('delete')) {
-//     if (confirm('Are You Sure?')) {
-//       var li = e.target.parentElement;
-//       let x = li.textContent
-//       var num = `${x}`.match(/\d+/g);
-//       const response = axios.post('http://localhost:3000/booking/delete-user/', { Number: num[0] })
-//       response.then((res) => itemList.removeChild(li)).catch(err => console.log(err))
+// Remove item from the list
+function removeItem(e) {
+  if (e.target.classList.contains('delete1')) {
+    if (confirm('Are You Sure?')) {
+      var li = e.target.parentElement;
+      let x = li.textContent
+      var num = `${x}`.match(/\d+/g);
+      const response = axios.post('http://localhost:3000/shop/delete-item/', { id: num[0], quantity: 1 })
+      response.then((res) => console.log(res.data.dataValues)).catch(err => console.log(err))
+    }
+  }
+  if (e.target.classList.contains('delete2')) {
+    if (confirm('Are You Sure?')) {
+      var li = e.target.parentElement;
+      let x = li.textContent
+      var num = `${x}`.match(/\d+/g);
+      const response = axios.post('http://localhost:3000/shop/delete-item/', { id: num[0], quantity: 2 })
+      response.then((res) => console.log(res.data.dataValues)).catch(err => console.log(err))
+    }
+  }
+  if (e.target.classList.contains('delete3')) {
+    if (confirm('Are You Sure?')) {
+      var li = e.target.parentElement;
+      let x = li.textContent
+      var num = `${x}`.match(/\d+/g);
+      const response = axios.post('http://localhost:3000/shop/delete-item/', { id: num[0], quantity: 3 })
+      response.then((res) => console.log(res.data.dataValues)).catch(err => console.log(err))
 
-//     }
-//   }
-// }
+    }
+  }
+}
 
-//edit item in the list
-// function editItem(e) {
-//   if (e.target.classList.contains('edit')) {
-//     let x = e.target.parentElement.textContent
-//     var num = `${x}`.match(/\d+/g);
-//     const response = axios.post("http://localhost:3000/booking/edit-user/", { Number: num[0] })
-//     response.then((res) => {
-//       document.getElementById('name').value = res.data.Name;
-//       document.getElementById('number').value = res.data.Number;
-//       document.getElementById('email').value = res.data.Email;
-//       localStorage.removeItem(num[0]);
-//       var li = e.target.parentElement;
-//       itemList.removeChild(li)
-//       const response = axios.post('http://localhost:3000/booking/delete-user/', { Number: num[0] })
-//       response.then((res) => console.log(res)).catch(err => console.log(err))
-//     }).catch(err => console.log(err))
 
-//   }
-// }
 

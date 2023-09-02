@@ -16,7 +16,6 @@ exports.addItem = (req, res) => {
 };
 
 
-
 exports.getItem = (req, res) => {
   Shop.findAll().then((item) => {
     res.send(item)
@@ -24,13 +23,16 @@ exports.getItem = (req, res) => {
 };
 
 exports.deleteItem = (req, res) => {
-  const number = req.body.Number;
+  const id = req.body.id;
+  const quantity = req.body.quantity;
   let obj = {};
-  Shop.findAll({ where: { Number: number } }).then(([user]) => {
-    console.log(user)
-    obj = { ...user }
-    return user.destroy()
+  Shop.findAll({ where: { id: id } }).then(([item]) => {
+    if (quantity == item.quantity) item.destroy();
+    item.quantity = item.quantity - quantity
+    if (item.quantity < 0) item.destroy();
+    obj = { ...item }
+    return item.save()
   }).then(() => {
-    res.redirect(obj);
+    res.send(obj);
   }).catch(err => console.log(err))
 };
